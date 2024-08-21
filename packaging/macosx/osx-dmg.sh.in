@@ -6,7 +6,7 @@ set -e
 
 # Defaults
 app_name="Wireshark"
-dmgbuild="@DMGBUILD_EXECUTABLE@"
+dmgbuild="/opt/anaconda3/bin/dmgbuild"
 version="@PROJECT_VERSION@"
 log_version="@LOG_PROJECT_VERSION@"
 app_settings_file="@CMAKE_BINARY_DIR@/packaging/macosx/wireshark-app.dmgbuild"
