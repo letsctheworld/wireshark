@@ -223,7 +223,7 @@ static int ett_quic_crypto_fragment;
 static dissector_handle_t quic_handle;
 static dissector_handle_t tls13_handshake_handle;
 
-static dissector_table_t quic_proto_dissector_table;
+dissector_table_t quic_proto_dissector_table;
 
 /* Fields for showing reassembly results for fragments of QUIC stream data. */
 static const fragment_items quic_stream_fragment_items = {
@@ -3329,6 +3329,7 @@ quic_get_1rtt_hp_cipher(packet_info *pinfo, quic_info_data_t *quic_info, bool fr
                 }
             }
         }
+    return &pp_state->hp_cipher;
     }
 
     // Note: Header Protect cipher does not change after Key Update.

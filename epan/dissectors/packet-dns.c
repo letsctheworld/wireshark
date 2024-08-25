@@ -4544,7 +4544,7 @@ static void
 dissect_dns_common(tvbuff_t *tvb, packet_info *pinfo, proto_tree *tree,
     enum DnsTransport transport, bool is_mdns, bool is_llmnr)
 {
-  int                offset   = (transport == DNS_TRANSPORT_TCP || transport == DNS_TRANSPORT_QUIC) ? 2 : 0;
+  int                offset   = 0;//(transport == DNS_TRANSPORT_TCP || transport == DNS_TRANSPORT_QUIC) ? 2 : 0;
   int                dns_data_offset;
   proto_tree        *dns_tree, *field_tree;
   proto_item        *ti, *tf, *transaction_item;
@@ -4811,7 +4811,11 @@ dissect_dns_common(tvbuff_t *tvb, packet_info *pinfo, proto_tree *tree,
   proto_tree_add_uint(dns_tree, hf_dns_count_add_rr, tvb,
       offset + DNS_ADD, 2, add);
 
+
+
   cur_off = offset + DNS_HDRLEN;
+
+
 
   if (opcode == OPCODE_DSO && quest == 0 && ans == 0 && auth == 0 && add == 0) {
     /* DSO messages differs somewhat from the traditional DNS message format.
@@ -4860,6 +4864,7 @@ dissect_dns_common(tvbuff_t *tvb, packet_info *pinfo, proto_tree *tree,
     cur_off += dissect_answer_records(tvb, cur_off, dns_data_offset, add, dns_tree, "Additional records",
                                       pinfo, is_mdns, rr_types);
   }
+
   col_set_fence(pinfo->cinfo, COL_INFO);
 
   /* print state tracking in the tree */

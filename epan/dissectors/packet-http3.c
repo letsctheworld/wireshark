@@ -1302,7 +1302,7 @@ http3_reset_inner_conversation(packet_info *pinfo, void *ctx)
         pinfo->conv_elements                       = conv_elements;
     }
 }
-
+extern dissector_table_t quic_proto_dissector_table;
 static int
 dissect_http3_data(tvbuff_t *tvb, packet_info *pinfo, proto_tree *http3_tree, unsigned offset _U_,
                    quic_stream_info *stream_info, http3_stream_info_t *http3_stream)
@@ -1315,7 +1315,17 @@ dissect_http3_data(tvbuff_t *tvb, packet_info *pinfo, proto_tree *http3_tree, un
     remaining = tvb_reported_length(tvb);
     inner_conv = http3_find_inner_conversation(pinfo, stream_info, http3_stream, &saved_ctx);
     ti_data    = proto_tree_add_item(http3_tree, hf_http3_data, tvb, offset, remaining, ENC_NA);
-    http3_reset_inner_conversation(pinfo, saved_ctx);
+    
+
+
+        tvbuff_t *next_tvb = tvb_new_subset_remaining(tvb, offset);
+        // Traverse the STREAM frame tree.
+        proto_tree *top_tree = proto_tree_get_parent_tree(http3_tree);
+        top_tree = proto_tree_get_parent_tree(top_tree);
+        // Subdissectors MUST NOT assume that 'stream_info' remains valid after
+        // returning. Copying the pointer will result in illegal memory access.
+        call_dissector_with_data(dissector_get_string_handle(quic_proto_dissector_table, "doq"), next_tvb, pinfo, top_tree, stream_info);
+        http3_reset_inner_conversation(pinfo, saved_ctx);
 
     return tvb_reported_length(tvb);
 }
