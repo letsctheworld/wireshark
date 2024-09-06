@@ -5017,7 +5017,7 @@ dissect_dns_doh(tvbuff_t *tvb, packet_info *pinfo, proto_tree *tree, void* data 
 static int
 dissect_dns_doq(tvbuff_t *tvb, packet_info *pinfo, proto_tree *tree, void* data _U_)
 {
-  col_set_str(pinfo->cinfo, COL_PROTOCOL, "DNS");
+  col_set_str(pinfo->cinfo, COL_PROTOCOL, "DOH3");
 
   dissect_dns_common(tvb, pinfo, tree, DNS_TRANSPORT_QUIC, false, false);
   return tvb_captured_length(tvb);
